@@ -1,8 +1,12 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using MajorKey.Core.Contracts.Repositories;
 using MajorKey.Core.Contracts.Services;
+using MajorKey.Core.Models.DataTransfer;
 using MajorKey.Core.Services;
 using MajorKey.Insfrastructure.DAL;
 using MajorKey.Insfrastructure.Repositories;
+using MajorKey.Validation.Request;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +26,9 @@ namespace MajorKey.WebApi
             services.AddDbContext<ApplicationContext>(opt => opt.UseInMemoryDatabase("RequestsDB"));
             services.AddScoped<IRequestRepository, RequestRepository>();
             services.AddScoped<IRequestService, RequestService>();
+            services.AddFluentValidation();
+            services.AddTransient<IValidator<CreateRequestDto>, CreateRequestValidator>();
+            services.AddTransient<IValidator<UpdateRequestDto>, UpdateRequestValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
