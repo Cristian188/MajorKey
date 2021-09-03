@@ -78,6 +78,21 @@ namespace MajorKey.Controllers
             return Ok();
         }
 
+        // PUT: api/Requests/5/status/complete
+        [HttpPut("{id}/status/{status}")]
+        public async Task<IActionResult> PutRequestStatus(long id, CurrentStatus status)
+        {
+            var request = await _requestService.GetRequestAsync(id);
+            if (request == null)
+            {
+                return NotFound();
+            }
+
+            await _requestService.SetRequestStatusAsync(request, status);
+
+            return Ok();
+        }
+
         // POST: api/Requests
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.

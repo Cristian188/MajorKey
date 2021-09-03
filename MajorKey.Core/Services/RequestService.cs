@@ -1,5 +1,6 @@
 ﻿using MajorKey.Core.Contracts.Repositories;
 using MajorKey.Core.Contracts.Services;
+using MajorKey.Core.Models;
 using MajorKey.Core.Models.DataTransfer;
 using MajorKey.Core.Models.Entities;
 using System;
@@ -12,10 +13,12 @@ namespace MajorKey.Core.Services
     public class RequestService : IRequestService
     {
         private readonly IRequestRepository requestRepository;
+        private readonly IMailService mailService;
 
-        public RequestService(IRequestRepository requestRepository)
+        public RequestService(IRequestRepository requestRepository, IMailService mailService)
         {
             this.requestRepository = requestRepository;
+            this.mailService = mailService;
         }
 
         public async Task<Request> CreateRequestAsync(CreateRequestDto model)
@@ -33,6 +36,11 @@ namespace MajorKey.Core.Services
 
         public async Task DeleteRequestAsync(Request request)
         {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(Request));
+            }
+
             await requestRepository.DeleteAsync(request);
         }
 
@@ -58,7 +66,6 @@ namespace MajorKey.Core.Services
                 Id = model.Id,
                 Description = model.Description,
                 BuildingCode = model.BuildingCode,
-                CurrentStatus = model.CurrentStatus,
                 LastModifiedBy = model.LastModifiedBy
             };
 
@@ -68,6 +75,37 @@ namespace MajorKey.Core.Services
         public async Task<bool> RequestExist(long requestId)
         {
             return await requestRepository.ExistAsync(requestId);
+        }
+
+        public async Task SetRequestStatusAsync(Request request, CurrentStatus status)
+        {
+            var prevRequestStatus = request.CurrentStatus;
+            if (prevRequestStatus == status)
+            { 
+                return;
+            }
+
+            request.CurrentStatus = status;
+            await requestRepository.UpdateAsync(request);
+
+            // customer notification.
+            if (prevRequestStatus != CurrentStatus.Complete &&
+                status == CurrentStatus.Complete)
+            {
+                await NotifyCustomer();
+            }
+        }
+
+        private async Task NotifyCustomer()
+        {
+            var mailRequest = new MailRequest()
+            {
+                Body = "Test body email",
+                Subject = "Test subject email",
+                ToEmail = "cristiandominutti@gmail.com"
+            };
+
+            await this.mailService.SendEmailAsync(mailRequest);
         }
     }
 }

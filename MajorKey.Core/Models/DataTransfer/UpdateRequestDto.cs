@@ -9,7 +9,6 @@ namespace MajorKey.Core.Models.DataTransfer
     {
         public string BuildingCode { get; set; }
         public string Description { get; set; }
-        public CurrentStatus CurrentStatus { get; set; }
         public string LastModifiedBy { get; set; }
     }
 }

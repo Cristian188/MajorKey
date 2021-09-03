@@ -1,11 +1,10 @@
 ﻿using MajorKey.Core.Contracts.Repositories;
 using MajorKey.Core.Models.Entities;
 using MajorKey.Insfrastructure.DAL;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 namespace MajorKey.Insfrastructure.Repositories
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity

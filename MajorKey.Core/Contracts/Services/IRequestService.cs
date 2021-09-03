@@ -1,8 +1,6 @@
 ﻿using MajorKey.Core.Models.DataTransfer;
 using MajorKey.Core.Models.Entities;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MajorKey.Core.Contracts.Services
@@ -21,5 +19,7 @@ namespace MajorKey.Core.Contracts.Services
         Task DeleteRequestAsync(Request request);
 
         Task<bool> RequestExist(long id);
+
+        Task SetRequestStatusAsync(Request request, CurrentStatus status);
     }
 }

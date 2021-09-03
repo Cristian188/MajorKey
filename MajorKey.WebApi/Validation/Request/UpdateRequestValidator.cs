@@ -15,7 +15,6 @@ namespace MajorKey.Validation.Request
 			RuleFor(x => x.Id).NotEmpty();
 			RuleFor(x => x.BuildingCode).Length(0, 10);
 			RuleFor(x => x.Description).Length(0, 255);
-			RuleFor(x => x.CurrentStatus).IsInEnum();
 			RuleFor(x => x.LastModifiedBy).NotEmpty().Length(0, 255);
 		}
 	}
